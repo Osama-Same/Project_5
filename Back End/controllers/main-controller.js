@@ -1,4 +1,6 @@
-const articles = [
+
+
+let articles = [
     {
     id: 1,
     title: 'eat fried chicken',
@@ -19,11 +21,55 @@ const articles = [
     },
     ];
 
-const getAllArticles  = (req, res) => {
+  const getAllArticles  = (req, res) => {
           res.json(articles)
   };
+ 
+  const createNewArticle  = (req, res) => {
+    const Update=req.body;
+    articles.push(Update);
+     res.json(articles);
+    };
+
+
+  const changeArticleTitleById  = (req, res) => {
+    articles[req.params.id].id =req.params.id;
+    articles[req.params.id].title=req.params.newTitle;
+    res.json(articles[req.params.id]);
+    
+    };
+  const changeArticleAuthorById  = (req, res) => {
+    
+    articles[req.params.id].author =req.body.author;
+    res.json(articles[req.params.id]);
+    
+    };
+
+
+  const deleteArticleById  = (req, res) => {
+    articles=articles.filter((ele)=>{
+      return ele.id != req.params.id;
+    })
+    res.json(articles);
+    
+    };
+
+  const deleteArticleByAuthor = (req, res) => {
+    articles.author
+    res.json(articles);
+       
+  }
+   
+    
+
+    
 
 
   module.exports={
-    getAllArticles
+    getAllArticles,
+    createNewArticle ,
+    changeArticleTitleById,
+    changeArticleAuthorById,
+    deleteArticleById,
+    deleteArticleByAuthor
   }
