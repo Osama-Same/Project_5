@@ -1,30 +1,29 @@
-const users = [
-  { name: 'jouza', age: 25 },
-  { name: 'abd', age: 18 },
-  { name: 'amr', age: 24 },
-];
+const articles = [
+    {
+    id: 1,
+    title: 'eat fried chicken',
+    description: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit.',
+    author: 'jouza',
+    },
+    {
+    id: 4,
+    title: 'how to studey react',
+    description: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit.',
+    author: 'abd',
+    },
+    {
+    id: 7,
+    title: 'how to vote',
+    description: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit',
+    author: 'jouza',
+    },
+    ];
 
-const getUserName = (req, res) => {
-  console.log('getUserName CALLED');
-  console.log('REQ.PARAMS: ',req.params)
-  res.json(users[req.params.userIndex].name.toUpperCase());
-};
-
-const getAllUsers = (req, res) => {
-  console.log('getAllUsers CALLED');
-  res.json(users);
-};
-
-//   {"getAllUsers":getAllUsers    }
-const deleteFirstUser = (req, res) => {
-  console.log('deleteFirstUser CALLED');
-  users.shift();
-  res.json(users);
-};
+const getAllArticles  = (req, res) => {
+          res.json(articles)
+  };
 
 
-module.exports = {
-  getAllUsers,
-  deleteFirstUser,
-  getUserName
-};
+  module.exports={
+    getAllArticles
+  }
