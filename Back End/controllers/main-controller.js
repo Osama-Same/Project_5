@@ -1,4 +1,6 @@
-
+const connection = require("../db");
+const express = require("express");
+require("dotenv").config();
 
 let articles = [
     {
@@ -61,18 +63,92 @@ let articles = [
     res.json(articles);
     
     };
-      
    
-    
+    //MySql
+   const  getAllArticlesMySql=(req,res)=>{
+    const command = `SELECT * FROM articles WHERE is_deleted=0`;
+    connection.query(command, (err, result) => {
+      if (err) throw err;
+      // console.log("RESULT: ", result);
+      res.json(result);
+    });
+   }
+   //title,description,author
+   const createNewArticleMySql =(req,res)=>{
+    const query = `INSERT INTO articles (title,description,author)
+      VALUES (?,?,?)`;
+    let {title,description,author}= req.body;
+    const data = [title,description,author];
+    connection.query(query, data, (err, result) => {
+      if (err) throw err
+      // console.log("RESULT: ", result);
+      res.json(`successfully create articles`);
+    });
+   }
 
+   
+   const changeArticleTitleByIdMySql =(req,res)=>{
+     const {id}=req.params;
+     const {title}=req.params;
+     
+    const command =("UPDATE articles SET  title = ?  WHERE id = ?");
+    const data =[title,id]
+    connection.query(command,data, (err, result) => {
+      if (err) throw err
+      // console.log("RESULT: ", result);
+      res.json(`successfully create articles`);
+    });
+   }
+  
+   const changeArticleAuthorByIdMySql =(req,res)=>{
+     const {id}=req.params;
+     const {author}=req.body;
+     
+    const command =("UPDATE articles SET author = ? WHERE id = ?");
+    const data =[author,id]
+    connection.query(command,data, (err, result) => {
+      if (err) throw err
+      // console.log("RESULT: ", result);
+      res.json(result);
+    });
+   }
     
+   const deleteArticleByIdMySql = (req,res)=>{
+    const command = `DELETE FROM articles WHERE id=?`;
+    const data = [req.params.id];
+    connection.query(command,data, (err, result) => {
+      if (err) throw err
+       console.log("RESULT: ", result);
+      res.json(result);
+    });
+   }
+  
+   const deleteArticleByAuthorMySql = (req,res) =>{
+   
+    const command = `DELETE FROM articles WHERE author=?`;
+    const data = [req.body.author];
+    connection.query(command,data, (err, result) => {
+      if (err) throw err
+       console.log("RESULT: ", result);
+      res.json(result);
+    });
+   }
+   
 
 
   module.exports={
+    //Express
     getAllArticles,
     createNewArticle ,
     changeArticleTitleById,
     changeArticleAuthorById,
     deleteArticleById,
-    deleteArticleByAuthor
+    deleteArticleByAuthor,
+    //MySql
+    getAllArticlesMySql,
+    createNewArticleMySql,
+    changeArticleTitleByIdMySql,
+    changeArticleAuthorByIdMySql,
+    deleteArticleByIdMySql,
+    deleteArticleByAuthorMySql
   }
