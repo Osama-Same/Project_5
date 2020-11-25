@@ -55,10 +55,13 @@ let articles = [
     };
 
   const deleteArticleByAuthor = (req, res) => {
-    articles.author
+    articles=articles.filter((ele)=>{
+      return ele.author != req.body.author;
+    })
     res.json(articles);
-       
-  }
+    
+    };
+      
    
     
 
