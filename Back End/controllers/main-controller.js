@@ -101,14 +101,13 @@ let articles = [
    }
   
    const changeArticleAuthorByIdMySql =(req,res)=>{
-     const {id}=req.params;
-     const {author}=req.body;
+     const id=req.params.id;
+     const author=req.body.author;
      
-    const command =("UPDATE articles SET author = ? WHERE id = ?");
+    const command =(`UPDATE articles SET author = ? WHERE id = ?`);
     const data =[author,id]
     connection.query(command,data, (err, result) => {
       if (err) throw err
-      // console.log("RESULT: ", result);
       res.json(result);
     });
    }
