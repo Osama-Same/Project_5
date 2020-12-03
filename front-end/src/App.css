@@ -21,14 +21,7 @@ body{
     border-radius: 4px;
     resize: vertical;
 }
-.from  button{
-    margin: 1.5rem 0;
-    background-color: blue;
-    color:white;
-    height: 49%;
-    width: 109%;
-    text-align: center;
-}
+
 
 .rent-post {
     display: flex;
@@ -57,4 +50,36 @@ body{
     margin: 0 auto;
     margin-top: auto;
   }
+
+  /*Login*/
+  .from_login h1{
+    text-align: center;
+  }
+  .from_login{
+    background-color: white;
+    border: 1px solid lightgray;
+    border-radius: 25px;
+    padding: 4rem;
+    margin: 7rem auto;
+    width: 20rem;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  .from_login section input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+    margin: 10px;
+}
   
+.from_login section button{
+  margin: 1.5rem 23px;;
+  padding: 10px 10px;
+  background-color: blue;
+  color:white;
+  height: 50%;
+  width: 100%;
+}

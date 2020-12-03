@@ -1,6 +1,7 @@
 const connection = require("../db");
 const express = require("express");
-require("dotenv").config();
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 let articles = [
     {
@@ -23,24 +24,24 @@ let articles = [
     },
     ];
 
-  const getAllArticles  = (req, res) => {
+  const getAllArticlesExpress  = (req, res) => {
           res.json(articles)
   };
  
-  const createNewArticle  = (req, res) => {
+  const createNewArticleExpress  = (req, res) => {
     const Update=req.body;
     articles.push(Update);
      res.json(articles);
     };
 
 
-  const changeArticleTitleById  = (req, res) => {
+  const changeArticleTitleByIdExpress  = (req, res) => {
     articles[req.params.id].id =req.params.id;
     articles[req.params.id].title=req.params.newTitle;
     res.json(articles[req.params.id]);
     
     };
-  const changeArticleAuthorById  = (req, res) => {
+  const changeArticleAuthorByIdExpress  = (req, res) => {
     
     articles[req.params.id].author =req.body.author;
     res.json(articles[req.params.id]);
@@ -48,7 +49,7 @@ let articles = [
     };
 
 
-  const deleteArticleById  = (req, res) => {
+  const deleteArticleByIdExpress  = (req, res) => {
     articles=articles.filter((ele)=>{
       return ele.id != req.params.id;
     })
@@ -56,7 +57,7 @@ let articles = [
     
     };
 
-  const deleteArticleByAuthor = (req, res) => {
+  const deleteArticleByAuthorExpress = (req, res) => {
     articles=articles.filter((ele)=>{
       return ele.author != req.body.author;
     })
@@ -65,89 +66,114 @@ let articles = [
     };
    
     //MySql
-   const  getAllArticlesMySql=(req,res)=>{
-    const command = `SELECT * FROM articles WHERE is_deleted=0`;
-    connection.query(command, (err, result) => {
+    const getAllArticlesMySql = (req, res) => {
+      const sqlCommand = `SELECT * FROM articles WHERE is_deleted = 0`;
+      connection.query(sqlCommand, (err, result) => {
       if (err) throw err;
-      // console.log("RESULT: ", result);
       res.json(result);
-    });
-   }
+      });
+      };
    //title,description,author
-   const createNewArticleMySql =(req,res)=>{
-    const query = `INSERT INTO articles (title,description,author)
-      VALUES (?,?,?)`;
-    let {title,description,author}= req.body;
-    const data = [title,description,author];
-    connection.query(query, data, (err, result) => {
-      if (err) throw err
-      // console.log("RESULT: ", result);
-      res.json(`successfully create articles`);
+   const createNewArticleMySql = (req, res) => {
+    const sqlCommand = `INSERT INTO articles (title, description, author) VALUES (?,?,?)`;
+    const data = [req.body.title, req.body.description, req.body.author];
+    connection.query(sqlCommand, data, (err, result, field) => {
+    if (err) throw err;
+    res.json('Success create new article');
     });
-   }
+    };
 
    
-   const changeArticleTitleByIdMySql =(req,res)=>{
-     const {id}=req.params;
-     const {title}=req.params;
-     
-    const command =("UPDATE articles SET  title = ?  WHERE id = ?");
-    const data =[title,id]
-    connection.query(command,data, (err, result) => {
-      if (err) throw err
-      // console.log("RESULT: ", result);
-      res.json(`successfully create articles`);
-    });
-   }
+    const changeArticleTitleByIdMySql = (req, res) => {
+      const sqlCommand = `UPDATE articles SET title = ? WHERE id = ?`;;
+      const data = [req.params.newTitle, req.params.id];
+      connection.query(sqlCommand, data, (err, result, field) => {
+      if (err) throw err;
+      res.json('Success change article title ');
+      });
+      };
   
-   const changeArticleAuthorByIdMySql =(req,res)=>{
-     const id=req.params.id;
-     const author=req.body.author;
-     
-    const command =(`UPDATE articles SET author = ? WHERE id = ?`);
-    const data =[author,id]
-    connection.query(command,data, (err, result) => {
-      if (err) throw err
-      res.json(result);
-    });
-   }
+      const changeArticleAuthorByIdMySql = (req, res) => {
+        const sqlCommand = `UPDATE articles SET author = ? WHERE id = ?`;;
+        const data = [req.body.newAuthor, req.params.id];
+        connection.query(sqlCommand, data, (err, result, field) => {
+        if (err) throw err;
+        res.json('Success change article author name');
+        });
+        };
     
-   const deleteArticleByIdMySql = (req,res)=>{
-    const command = `DELETE FROM articles WHERE id=?`;
-    const data = [req.params.id];
-    connection.query(command,data, (err, result) => {
-      if (err) throw err
-       console.log("RESULT: ", result);
-      res.json(result);
+        const deleteArticleByIdMySql = (req,res)=>{
+        const command = `DELETE FROM articles WHERE id=?`;
+        const data = [1,req.params.id];
+        connection.query(command,data, (err, result) => {
+        if (err) throw err
+        console.log("RESULT: ", result);
+        res.json(result);
     });
    }
   
-   const deleteArticleByAuthorMySql = (req,res) =>{
-   
-    const command = `DELETE FROM articles WHERE author=?`;
-    const data = [req.body.author];
-    connection.query(command,data, (err, result) => {
-      if (err) throw err
+       const deleteArticleByAuthorMySql = (req,res) =>{
+       const command = `DELETE FROM articles WHERE author=?`;
+       const data = [1,req.body.author];
+       connection.query(command,data, (err, result) => {
+       if (err) throw err
        console.log("RESULT: ", result);
-      res.json(result);
+       res.json(result);
     });
    }
-   
+    //register
+  
+   const CreateNewUser = async (req, res) => {
+    const query = `INSERT INTO users (email, password, name, age) VALUES (?,?,?,?)`;
+    let { email, password, name , age } = req.body;
+    password = bcrypt.hashSync(password, Number("salt"));
+    const data = [email, password, name, age];
+    connection.query(query, data, (err, result) => {
+      res.json({ status: "User registerd" });
+      if (err) throw err;
+      // console.log("data", data);
+    });
+  };
+   const Login = (req,res)=>{
+    const query = `Select * From users WHERE email=?;`;
+    const{email,password}=req.body;
+    const data =[email,password];
+    connection.query(query,data,async (err, result)=>{
+      if(err) throw err;
+      if(result.length){
+        if(await bcrypt.compare(password,result[0].password)){
+          const{user_id,email,password,name,age}=result[0]
+          const payload ={user_id,email:email,password:password,name:name,age:age}
+          const options={expiresIn: process.env.TOKEN_EXPIRATION}
+          token =jwt.sign(payload,process.env.SECRET,options)
+          res.json("Success login");
+        }else {
+          res.json({ error: "Password is wrong" });
+        }
+      }else{
+          res.json({ error: "Email is wrong" });
+      }
+    })
 
+   }  
+  
 
   module.exports={
     //Express
-    getAllArticles,
-    createNewArticle ,
-    changeArticleTitleById,
-    changeArticleAuthorById,
-    deleteArticleById,
-    deleteArticleByAuthor,
+    getAllArticlesExpress,
+    createNewArticleExpress ,
+    changeArticleTitleByIdExpress,
+    changeArticleAuthorByIdExpress,
+    deleteArticleByIdExpress,
+    deleteArticleByAuthorExpress,
     //MySql
     getAllArticlesMySql,
     createNewArticleMySql,
     changeArticleTitleByIdMySql,
     changeArticleAuthorByIdMySql,
     deleteArticleByIdMySql,
-    deleteArticleByAuthorMySql
+    deleteArticleByAuthorMySql,
+    //register
+    CreateNewUser,
+    Login
   }

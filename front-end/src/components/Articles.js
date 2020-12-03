@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
+import {
+  Route,
+  BrowserRouter as Router,
+  Redirect,
+  Link,
+} from "react-router-dom";
 
 
 
@@ -55,10 +60,10 @@ const Articles = () => {
       const Update =()=>{
         
         axios
-        .put(`http://localhost:5000/articlesMySql/${id}`,Articles[0])
+        .put(`http://localhost:5000/articlesMySql/${id}`)
         .then(() => {
           const newArray = [...Articles];
-          newArray.author=UpdateAuthor;
+          newArray[0].author=UpdateAuthor;
          SetArticles(newArray);
          console.log("Success Update article")
         })
@@ -72,7 +77,7 @@ const Articles = () => {
       const deleteArticles = async () => {
       
         axios
-          .delete(`http://localhost:5000/articlesMySql/${id}`,Articles[0])
+          .delete(`http://localhost:5000/articlesMySql/${id}`,Articles)
           .then(async (response) => {
             const newArray = [...Articles];
             newArray.shift(newArray);
@@ -85,14 +90,18 @@ const Articles = () => {
       };
 
       const data = Articles.map((ele,index)=>{
-          return <div num={index + 1} key={index} ele={ele} className="rent-post">
+          return <div  key={index} ele={ele} className="rent-post">
               <div>
                 <div>
+                  <Router>
+                  <Link >
                   <ul key={index.id}>
                     <li>title: {ele.title}</li>
                     <li>description: {ele.description}</li>
                     <li>author: {ele.author}</li>
                   </ul>
+                  </Link>
+                  </Router>
                 </div>
               <input onChange={(e) => {setUpdateAuthor(e.target.value)}}placeholder='author'></input>
               <button onClick={Update}>Update Articles</button>
