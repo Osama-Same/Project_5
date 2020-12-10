@@ -2,13 +2,14 @@
 USE P5;
 
 CREATE TABLE articles (
-articles_id int AUTO_INCREMENT NOT NULL,
+id int AUTO_INCREMENT NOT NULL,
 title varchar(100),
 description varchar(255),
 author varchar(50),
+user_id int,
 is_deleted TINYINT DEFAULT 0,
-PRIMARY KEY (articles_id)
-
+PRIMARY KEY (id),
+FOREIGN KEY (user_id) REFERENCES users (user_id)
 );
 CREATE TABLE users (
     user_id int AUTO_INCREMENT NOT NULL,

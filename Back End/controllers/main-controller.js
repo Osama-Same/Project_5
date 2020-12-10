@@ -94,23 +94,31 @@ let articles = [
       };
   
       const changeArticleAuthorByIdMySql = (req, res) => {
-        const sqlCommand = `UPDATE articles SET author = ? WHERE id = ?`;;
+        const sqlCommand = `UPDATE articles SET author = ? WHERE id = ?`;
         const data = [req.body.newAuthor, req.params.id];
         connection.query(sqlCommand, data, (err, result, field) => {
-        if (err) throw err;
-        res.json('Success change article author name');
+          if (err) throw err;
+          res.json('Success change article author name');
         });
-        };
+      };
     
-        const deleteArticleByIdMySql = (req,res)=>{
-        const command = `DELETE FROM articles WHERE id=?`;
-        const data = [1,req.params.id];
-        connection.query(command,data, (err, result) => {
-        if (err) throw err
-        console.log("RESULT: ", result);
-        res.json(result);
-    });
-   }
+        const deleteArticleByIdMySql = (req, res) => {
+          const sqlCommand = `UPDATE articles SET is_deleted = ? WHERE id = ?`;
+          const data = [1,req.params.id];
+          connection.query(sqlCommand, data, (err, result, field) => {
+            if (err) throw err;
+            res.json('Success delete article by id');
+          });
+        };
+  
+        const deleteArticleByIdMySql1 = (req, res) => {
+          const sqlCommand = `DELETE FROM articles WHERE id=?`;
+          const data = [req.params.id];
+          connection.query(sqlCommand, data, (err, result, field) => {
+            if (err) throw err;
+            res.json('Success delete article by id');
+          });
+        };
   
        const deleteArticleByAuthorMySql = (req,res) =>{
        const command = `DELETE FROM articles WHERE author=?`;
@@ -173,6 +181,7 @@ let articles = [
     changeArticleAuthorByIdMySql,
     deleteArticleByIdMySql,
     deleteArticleByAuthorMySql,
+    deleteArticleByIdMySql1,
     //register
     CreateNewUser,
     Login

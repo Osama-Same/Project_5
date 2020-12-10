@@ -13,6 +13,7 @@ changeArticleTitleByIdMySql,
 changeArticleAuthorByIdMySql,
 deleteArticleByIdMySql,
 deleteArticleByAuthorMySql,
+deleteArticleByIdMySql1,
 CreateNewUser,
 Login
  } = require('../controllers/main-controller');
@@ -31,6 +32,7 @@ mainRouter.post('/articles/createMySql', createNewArticleMySql );
 mainRouter.put('/articlesMySql/:id/:newTitle', changeArticleTitleByIdMySql );
 mainRouter.put('/articlesMySql/:id', changeArticleAuthorByIdMySql );
 mainRouter.delete('/articlesMySql/:id', deleteArticleByIdMySql);
+mainRouter.delete('/articlesMySql1/:id', deleteArticleByIdMySql1);
 mainRouter.delete('/articlesMySql', deleteArticleByAuthorMySql);
 
 //register

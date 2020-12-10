@@ -1,138 +1,122 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import {
-  Route,
-  BrowserRouter as Router,
-  Redirect,
-  Link,
-} from "react-router-dom";
+import React, { useState,useEffect } from 'react';
+import axios from 'axios';
 
-
-
-
-const Articles = () => {
-    
-    const [Articles, SetArticles] = useState([]);
-    const [id,SetId]=useState(0)
-    const [title, Settitle] = useState("");
-    const [description, Setdescription] = useState("");
-    const [author, Setauthor] = useState(""); 
-    const [UpdateAuthor,setUpdateAuthor]=useState("")
-     
-      useEffect(() => {
-        console.log("========= USEEFFECT CALLED =========");
-        getAllArticlesMySql();
-      }, []);
-      const getAllArticlesMySql = () => {
-        axios
-          .get("http://localhost:5000/articlesMySql")
-          .then((response) => {
-            console.log("DATA: ", response.data);
-            SetArticles(response.data);
-          })
-          .catch((err) => {
-            console.log("RESULT: ", err);
-          });
-      };
-     
-    
-      
-
-      const handleSubmit = () => {
-          const data ={
-            title:title,
-            description:description,
-            author:author
-          }
-        axios
-        .post("http://localhost:5000/articles/createMySql", data)
-        .then((response) => {
-          console.log("response", response);
-          const newArray = [...Articles];
-          newArray.push(response.data);
-          SetArticles(newArray);
-        })
-        .catch((err) => {
-          console.log("RESULT: ", err);
-        });
-        
-      };
-      const Update =()=>{
-        
-        axios
-        .put(`http://localhost:5000/articlesMySql/${id}`)
-        .then(() => {
-          const newArray = [...Articles];
-          newArray[0].author=UpdateAuthor;
-         SetArticles(newArray);
-         console.log("Success Update article")
-        })
-        .catch((err) => {
-          console.log("RESULT: ", err);
-        });
-        
-      };
-
-
-      const deleteArticles = async () => {
-      
-        axios
-          .delete(`http://localhost:5000/articlesMySql/${id}`,Articles)
-          .then(async (response) => {
-            const newArray = [...Articles];
-            newArray.shift(newArray);
-           SetArticles(newArray);
-           console.log("Success delete article")
-          })
-          .catch((err) => {
-            console.log("RESULT: ", err);
-          });
-      };
-
-      const data = Articles.map((ele,index)=>{
-          return <div  key={index} ele={ele} className="rent-post">
-              <div>
-                <div>
-                  <Router>
-                  <Link >
-                  <ul key={index.id}>
-                    <li>title: {ele.title}</li>
-                    <li>description: {ele.description}</li>
-                    <li>author: {ele.author}</li>
-                  </ul>
-                  </Link>
-                  </Router>
-                </div>
-              <input onChange={(e) => {setUpdateAuthor(e.target.value)}}placeholder='author'></input>
-              <button onClick={Update}>Update Articles</button>
-              <button type="submit" onClick={deleteArticles}>Delete Article</button>
-              </div>
-          </div>
-          })
-      
-      
-    return (
-    <div>
-        <div>
-      <span>
-          <button  onClick={getAllArticlesMySql}>Get All Articles My Sql</button>
-          <button onClick={deleteArticles}>delete Articles</button>
+const Articles=()=> {
+  // [nameOfTheState,functionToChangeTheState] = (initalValue)
+  const [articles, setArticles] = useState([]);
+  const [id,SetID]=useState(0);
+  const [Title, setNewTitle] = useState("");
+  const [description, setNewDesc] = useState("");
+  const [Author, setNewAuthor] = useState("");
+  useEffect(() => {
+    console.log("========= USEEFFECT CALLED =========");
+    getAllArticles();
+  }, []);
+  const getAllArticles = () => {
+    axios
+      .get(`http://localhost:5000/articlesMySql`)
+      .then((response) => {
+        console.log('RESPONSE: ', response);
+        console.log('DATA: ', response.data);
+        setArticles(response.data);
+      })
+      .catch((err) => {
+        console.log('ERR: ', err);
+      });
+  };
+ 
+  const addNewArticle = () => {
+    axios
+      .post(`http://localhost:5000/articles/createMySql`, {
+        title:Title,
+        description:description,
+        author:Author,
+      })
+      .then((response) => {
+        console.log("RESPONSE: ", response);
+        console.log("DATA: ", response.data);
+        const newArray = [...articles];
+        newArray.push(response.data);
+        setArticles(newArray);
+      })
+      .catch((err) => {
+        console.log("ERR: ", err);
+      });
+  };
+  const deleteThisArticle=()=>{
+    axios
+      .delete(`http://localhost:5000/articlesMySql/${id}`)
+      .then((response) => {
+        console.log('DATA: ', response.data);
+        if(response.status === 200){
           
-      </span>
+          
+        }
+      })
+      .catch((err) => {
+        console.log('ERR: ', err);
+      });
+  }
+
+  const NewArticle = articles.map((e,i)=>{
+    return<div num={i +1} Key={i}>
+      <div className='card'>
+        <div class="card-body">
+      <h4 class="card-title">Title:{e.Title}</h4>
+      <p class="card-text">Description:{e.description}</p>
+      <div class="card-text">Author:{e.Author}</div>
+      
       </div>
-      <div className='from'>
-          <form onSubmit={handleSubmit}>
-          <input name='title' onChange={(e) => {Settitle(e.target.value);}} placeholder='Title'></input>  
-          <textarea name='description' onChange={(e) => {Setdescription(e.target.value);}} type='textarea'  placeholder='description'></textarea>  
-          <input name='author' onChange={(e) => {Setauthor(e.target.value);}}  placeholder='Author'></input>  
-          <button type='submit'>Add New Articles</button>
-           </form>
+      </div>
+    </div>
+  })
+
+  return (
+    <div className="app">
+      <div className="search">
+        <input type="search" placeholder="Search" className="form-control"></input>
+        <button type="submit" className="btn btn-primary">Search</button>
       </div>
       
-        <div>
-               {data} 
+        <form onClick={addNewArticle} className="NewItem">
+        <input
+          type="text"
+          className="form-control mb-2 mr-sm-2"
+          id="inlineFormInputName2"
+          placeholder="Title"
+          onChange={(e) => {
+            setNewTitle(e.target.value);
+          }}
+        />
+        <input
+          type="text"
+          className="form-control mb-2 mr-sm-2"
+          name="Description"
+          placeholder="Description"
+          onChange={(e) => {
+            setNewDesc(e.target.value);
+          }}
+        />
+        <input
+          type="text"
+          name="Author"
+          className="form-control mb-2 mr-sm-2"
+          placeholder="Author"
+          onChange={(e) => {
+            setNewAuthor(e.target.value);
+          }}
+        />
+        <button
+          type="submit"
+          className="btn btn-danger mb-2"
+        >
+          Add
+        </button>
+        </form>
+        <div className="border">
+          {NewArticle}
         </div>
     </div>
   );
-};
+}
 export default Articles;
