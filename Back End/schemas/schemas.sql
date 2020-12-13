@@ -4,6 +4,7 @@ USE P5;
 CREATE TABLE articles (
 id int AUTO_INCREMENT NOT NULL,
 title varchar(100),
+img_url VARCHAR (255),
 description varchar(255),
 author varchar(50),
 user_id int,

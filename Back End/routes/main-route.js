@@ -13,9 +13,9 @@ changeArticleTitleByIdMySql,
 changeArticleAuthorByIdMySql,
 deleteArticleByIdMySql,
 deleteArticleByAuthorMySql,
-deleteArticleByIdMySql1,
 CreateNewUser,
-Login
+Login,
+searchData
  } = require('../controllers/main-controller');
 
 //Express
@@ -30,12 +30,12 @@ mainRouter.delete('/articles', deleteArticleByAuthorExpress);
 mainRouter.get('/articlesMySql', getAllArticlesMySql );
 mainRouter.post('/articles/createMySql', createNewArticleMySql );
 mainRouter.put('/articlesMySql/:id/:newTitle', changeArticleTitleByIdMySql );
-mainRouter.put('/articlesMySql/:id', changeArticleAuthorByIdMySql );
-mainRouter.delete('/articlesMySql/:id', deleteArticleByIdMySql);
-mainRouter.delete('/articlesMySql1/:id', deleteArticleByIdMySql1);
+mainRouter.put('/articlesMySqlUpdata/:id', changeArticleAuthorByIdMySql );
+mainRouter.delete('/articlesMySqlDelete/:id', deleteArticleByIdMySql);
 mainRouter.delete('/articlesMySql', deleteArticleByAuthorMySql);
 
 //register
 mainRouter.post('/CreateNewUser',CreateNewUser)
 mainRouter.post('/Login',Login)
+mainRouter.get('/searchData',searchData)
 module.exports = mainRouter;

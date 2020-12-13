@@ -75,8 +75,8 @@ let articles = [
       };
    //title,description,author
    const createNewArticleMySql = (req, res) => {
-    const sqlCommand = `INSERT INTO articles (title, description, author) VALUES (?,?,?)`;
-    const data = [req.body.title, req.body.description, req.body.author];
+    const sqlCommand = `INSERT INTO articles (title,img_url, description, author) VALUES (?,?,?,?)`;
+    const data = [req.body.title, req.body.img_url, req.body.description, req.body.author];
     connection.query(sqlCommand, data, (err, result, field) => {
     if (err) throw err;
     res.json('Success create new article');
@@ -95,7 +95,7 @@ let articles = [
   
       const changeArticleAuthorByIdMySql = (req, res) => {
         const sqlCommand = `UPDATE articles SET author = ? WHERE id = ?`;
-        const data = [req.body.newAuthor, req.params.id];
+        let data = [req.body.author, req.params.id];
         connection.query(sqlCommand, data, (err, result, field) => {
           if (err) throw err;
           res.json('Success change article author name');
@@ -111,14 +111,6 @@ let articles = [
           });
         };
   
-        const deleteArticleByIdMySql1 = (req, res) => {
-          const sqlCommand = `DELETE FROM articles WHERE id=?`;
-          const data = [req.params.id];
-          connection.query(sqlCommand, data, (err, result, field) => {
-            if (err) throw err;
-            res.json('Success delete article by id');
-          });
-        };
   
        const deleteArticleByAuthorMySql = (req,res) =>{
        const command = `DELETE FROM articles WHERE author=?`;
@@ -163,9 +155,18 @@ let articles = [
       }
     })
 
-   }  
-  
-
+   } 
+   //searchData 
+   
+   const searchData = (req, res) => {
+    
+    const sqlCommand = `SELECT * FROM articles WHERE title='${req.body.title}'`;
+    
+    connection.query(sqlCommand, (err, result) => {
+    if (err) throw err;
+    res.json(result);
+    });
+    };
   module.exports={
     //Express
     getAllArticlesExpress,
@@ -181,8 +182,11 @@ let articles = [
     changeArticleAuthorByIdMySql,
     deleteArticleByIdMySql,
     deleteArticleByAuthorMySql,
-    deleteArticleByIdMySql1,
+    
     //register
     CreateNewUser,
-    Login
+    Login,
+
+     //searchData
+    searchData
   }

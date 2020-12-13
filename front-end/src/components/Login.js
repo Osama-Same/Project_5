@@ -14,19 +14,26 @@ const Login = () => {
   const validation = (values) => {
     let errors = {};
 
+    
+    if(!values.email && !values.password)
+    {
+      errors.email="ttttt"
+      errors.password="tttttt"
+
+     }else{
+      
     if (!values.email) {
       errors.email = "Email required";
     } else if (!/\S+@\S+\.\S+/.test(values.email)) {
       errors.email = "Invalid Email Address";
+    
     }
-
     if (!values.password) {
       errors.password = "Password Required";
     } else if (values.password.length < 3) {
       errors.password = "Incorrect Password";
     }
-    
-
+    }
     return errors;
   };
   
@@ -99,6 +106,7 @@ const Login = () => {
         <button type="button" className="btn btn-primary" onClick={handleSubmit}>
           Submit
         </button>
+        {errors.email && errors.password && <p>{errors.email} {errors.password}</p>}
       </div>
       <div className="form-group" >
         <Link to="/Register">Register</Link>
