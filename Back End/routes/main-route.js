@@ -15,7 +15,10 @@ deleteArticleByIdMySql,
 deleteArticleByAuthorMySql,
 CreateNewUser,
 Login,
-searchData
+searchData,
+weatherdata,
+contact,
+DataArticles
  } = require('../controllers/main-controller');
 
 //Express
@@ -38,4 +41,7 @@ mainRouter.delete('/articlesMySql', deleteArticleByAuthorMySql);
 mainRouter.post('/CreateNewUser',CreateNewUser)
 mainRouter.post('/Login',Login)
 mainRouter.get('/searchData',searchData)
+mainRouter.get('/weather',weatherdata)
+mainRouter.get('/contact',contact)
+mainRouter.get('/DataArticles/:id',DataArticles)
 module.exports = mainRouter;

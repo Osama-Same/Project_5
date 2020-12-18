@@ -9,7 +9,7 @@ const Header = () => {
         <ul className="nav justify-content-center">
         
           <li className="nav-link">
-          <i class="fas fa-home">
+          <i className="fas fa-home">
             <Link className="nav-link" to="/Home">Home</Link>
             </i>
           </li>

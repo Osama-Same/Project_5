@@ -9,6 +9,7 @@ import Header from './components/Header'
 import Home from './components/Home'
 import About from './components/About'
 import Contact from './components/Contact'
+import ID from './components/ID'
 // Class component
 
 const App = () => {
@@ -46,6 +47,12 @@ const App = () => {
           <Route exact path ="/Contact">
             <Header/>
             <Contact/>
+          </Route>
+          </div>
+          <div>
+          <Route exact path="/id">
+            <Header/>
+            <ID/>
           </Route>
           </div>
            

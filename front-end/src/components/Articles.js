@@ -2,19 +2,31 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import NewItem from "./NewItem";
 import ArticleItem from "./ArticleItem";
-
+import ID from './ID'
 
 const Articles = () => {
-  // [nameOfTheState,functionToChangeTheState] = (initalValue)
   
   const [articales, setArticales] = useState([]);
   const [allArticales, setAllArticales] = useState([])
   const [search, setSearch] = useState('');
+  const[weather,SetWeather]=useState('');
   useEffect(() => {
-    console.log("========= USEEFFECT CALLED =========");
     getAllArticles();
+    weatherData();
   }, []);
 
+  const weatherData = () => {
+    axios
+      .get(`http://localhost:5000/weather`)
+      .then((response) => {
+        console.log("RESPONSE: ", response);
+        console.log("DATA: ", response.data);
+        SetWeather(response.data);
+      })
+      .catch((err) => {
+        console.log("ERR: ", err);
+      });
+  };
   const getAllArticles = () => {
     axios
       .get(`http://localhost:5000/articlesMySql`)
@@ -41,13 +53,14 @@ const Articles = () => {
         })
     )
 }
-
-  const renderArticles = articales.map((e) => {
-    return <ArticleItem article={e} />;
+ 
+  const renderArticles = articales.map((e,i) => {
+    return <ArticleItem article={e} key={i} />;
   });
 
   return (
     <div className="app">
+      
       <div className="search">
         <input
           type="search"
@@ -55,11 +68,13 @@ const Articles = () => {
           className="form-control"
           value={search} 
           onChange={handleSearchChange}
-        ></input>
+        ></input><br></br>
+        <p>{weather && weather.name}</p>
       </div>
       <div>
         <NewItem getAllArticles={getAllArticles} />
       </div>
+      
       <div className="container">
         <div className="row row-cols-4">{renderArticles}</div>
       </div>

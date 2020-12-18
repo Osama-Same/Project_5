@@ -2,6 +2,8 @@ const connection = require("../db");
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const request = require('request')
+
 
 let articles = [
     {
@@ -167,6 +169,33 @@ let articles = [
     res.json(result);
     });
     };
+   const contact = (req, res) => {
+    
+    const sqlCommand = `SELECT users.user_id,users.email,users.name,articles.id,articles.title  
+                        FROM users   
+                        INNER JOIN articles  
+                        ON users.user_id = articles.id`;
+    
+    connection.query(sqlCommand, (err, result) => {
+    if (err) throw err;
+    res.json(result);
+    });
+    };
+    const weatherdata =(req,res)=>{
+      const Ap ="http://api.openweathermap.org/data/2.5/weather?q=Amman&appid=ba98c702f84ca0cecab68d61c6f73c3f"
+      request(Ap,(error,response,body)=>{
+        console.log(error)
+        console.log(response)
+        res.send(body)
+      })
+    }
+    const DataArticles = (req, res) => {
+      const sqlCommand = `SELECT * FROM articles WHERE id=${req.params.id}`;
+      connection.query(sqlCommand,(err, result) => {
+      if (err) throw err;
+      res.json(result);
+      });
+      };
   module.exports={
     //Express
     getAllArticlesExpress,
@@ -188,5 +217,8 @@ let articles = [
     Login,
 
      //searchData
-    searchData
+    searchData,
+    weatherdata,
+    contact,
+    DataArticles
   }
