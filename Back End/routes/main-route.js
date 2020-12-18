@@ -17,7 +17,7 @@ CreateNewUser,
 Login,
 searchData,
 weatherdata,
-contact,
+updateFavById,
 DataArticles
  } = require('../controllers/main-controller');
 
@@ -42,6 +42,6 @@ mainRouter.post('/CreateNewUser',CreateNewUser)
 mainRouter.post('/Login',Login)
 mainRouter.get('/searchData',searchData)
 mainRouter.get('/weather',weatherdata)
-mainRouter.get('/contact',contact)
+mainRouter.post('/updateFavById',updateFavById)
 mainRouter.get('/DataArticles/:id',DataArticles)
 module.exports = mainRouter;

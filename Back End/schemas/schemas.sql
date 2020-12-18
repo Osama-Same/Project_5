@@ -7,10 +7,9 @@ title varchar(100),
 img_url VARCHAR (255),
 description varchar(255),
 author varchar(50),
-user_id int,
+fav varchar(50),
 is_deleted TINYINT DEFAULT 0,
-PRIMARY KEY (id),
-FOREIGN KEY (user_id) REFERENCES users(id)
+PRIMARY KEY (id)
 );
 CREATE TABLE users (
     id int AUTO_INCREMENT NOT NULL,
@@ -21,10 +20,7 @@ CREATE TABLE users (
     is_deleted TINYINT DEFAULT 0,
     PRIMARY KEY (id)
 );
-CREATE TABLE contact (
-    user_id int,
-    id int
-);
+
 
 
 

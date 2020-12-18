@@ -169,17 +169,13 @@ let articles = [
     res.json(result);
     });
     };
-   const contact = (req, res) => {
-    
-    const sqlCommand = `SELECT users.user_id,users.email,users.name,articles.id,articles.title  
-                        FROM users   
-                        INNER JOIN articles  
-                        ON users.user_id = articles.id`;
-    
-    connection.query(sqlCommand, (err, result) => {
-    if (err) throw err;
-    res.json(result);
-    });
+    const updateFavById = (req, res) => {
+      const sqlCommand = `UPDATE articles SET fav = ? where id = ?`;
+      const data = [req.body.fav, req.body.id];
+      connection.query(sqlCommand, data, (err, result, field) => {
+        if (err) throw err;
+        res.json(true);
+      });
     };
     const weatherdata =(req,res)=>{
       const Ap ="http://api.openweathermap.org/data/2.5/weather?q=Amman&appid=ba98c702f84ca0cecab68d61c6f73c3f"
@@ -219,6 +215,6 @@ let articles = [
      //searchData
     searchData,
     weatherdata,
-    contact,
+    updateFavById,
     DataArticles
   }
