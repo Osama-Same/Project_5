@@ -9,7 +9,6 @@
     text-align: center;
     padding: 10px;
 }
-
 .NewItem{
     display: flex; 
     padding: 7px;  
@@ -28,11 +27,7 @@
 .NewArticle{
     display: flex;
 }
-.container{
-  margin: 10px 10px;
-  
-    
-}
+
 
 .card{
     margin: 10px;

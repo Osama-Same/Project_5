@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import NewItem from "./NewItem";
-import ArticleItem from './ArticleItem'
 import {Link} from "react-router-dom";
 const Articles = () => {
   const [articales, setArticales] = useState([]);
@@ -104,10 +103,10 @@ const Articles = () => {
         <div className="row row-cols-4">
           {articales.map((value, i) => {
             return (
-              <div className="card" key={i}>
+              <div className="card">
                 <div className="card-header">
                   <h4 className="card-title">
-                    <Link to="id"> Title: {value.title}</Link>
+                  <Link to={'/Article/' + value.id} params={{ id: value.id }}>{value.title}</Link>
                   </h4>
                 </div>
                 <div className="card-img-bottom">
@@ -134,9 +133,7 @@ const Articles = () => {
                 >
                   Delete{" "}
                 </button>
-                <div>
-                  <ArticleItem getAllArticles={getAllArticles} />
-                </div>
+                
                 <button
                   id="B4"
                   type="button"

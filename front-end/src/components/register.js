@@ -1,68 +1,67 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
-const Register = (props) => {
+import { Link, useHistory } from "react-router-dom";
+const Register = () => {
   const [values, setValues] = useState([]);
   const [email, SetEmail] = useState("");
   const [password, SetPassword] = useState("");
   const [name, SetName] = useState("");
   const [age, SetAge] = useState(0);
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState("");
+  let history = useHistory();
 
-  const validation = () => {
-    let errors = {};
-
-    if (!email === "") {
-      errors.email = "Email required";
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      errors.email = "Invalid Email Address";
-    }
-
-    if (!password === "") {
-      errors.password = "Password Required";
-    } else if (password.length < 3) {
-      errors.password = "Incorrect Password";
-    }
-    if (!name === "") {
-      errors.name = "name Required";
-    } else if (name.length < 3) {
-      errors.name = "Incorrect name";
-    }
-    if (age <= 16) {
-      errors.age = "age Required";
-    } else if (age <= 16) {
-      errors.age = "Incorrect age";
-    }
-
-    return errors;
+  const handleEmailChange = (e) => {
+    SetEmail(e.target.value);
   };
-  const handleSubmit1 = (e) => {
-    e.preventDefault();
-    setErrors(validation());
-    const data = {
-      email: email,
-      password: password,
-      name: name,
-      age: age,
-    };
+
+  const handlePasswordChange = (e) => {
+    SetPassword(e.target.value);
+  };
+
+  const handleNameChange = (e) => {
+    SetName(e.target.value);
+  };
+  const handleAgeChange = (e) => {
+    SetAge(e.target.value);
+  };
+  const handleSubmit1 = () => {
+    setErrors("");
+    if (email.length < "" && !/\S+@\S+\.\S+/.test(email)) {
+      setErrors("Email required");
+      return;
+    } else if (password.length < 3) {
+      setErrors("password is required !");
+      return;
+    }else if (name.length === "") {
+      setErrors("name Required");
+      return;
+    }else if (age <= 16) {
+      setErrors("age Required");
+      return;
+    }
     axios
-      .post("http://localhost:5000/CreateNewUser", data)
-      .then((response) => {
-        console.log("response", response);
-        const newArray = [...values];
-        newArray.push(response.data);
-        setValues(newArray);
-        props.history.push("/Articles");
+      .post("http://localhost:5000/CreateNewUser", {
+        email: email,
+        password: password,
+        name: name,
+        age: age,
       })
-      .catch((err) => {
-        console.log("RESULT: ", err);
+      .then((result) => {
+        if (!result.data.errors) {
+          
+          history.push("/Login");
+        } else {
+          setErrors("Server Error!");
+        }
       });
   };
 
   return (
-    <div>
-      <form onClick={handleSubmit1} className="Login">
+    <div className="container">
+      <div>
         <h1>Register</h1>
+      </div>
+      <div>
         <div className="form-group">
           <label htmlFor="exampleInputEmail1">Email</label>
           <input
@@ -71,63 +70,74 @@ const Register = (props) => {
             id="exampleInputEmail1"
             aria-describedby="emailHelp"
             placeholder="name@example.com"
-            required="true"
-            onChange={(e) => {
-              SetEmail(e.target.value);
-            }}
+            onChange={handleEmailChange}
           ></input>
-          {errors.email && <p className="input-error"> {errors.email} </p>}
-        </div>
-        <div className="form-group">
-          <label htmlFor="exampleInputPassword1">Password</label>
-          <input
-            type="password"
-            className="form-control"
-            id="exampleInputPassword1"
-            placeholder="Password"
-            onChange={(e) => {
-              SetPassword(e.target.value);
-            }}
-          ></input>
-          {errors.password && (
-            <p className="input-error"> {errors.password} </p>
+          {errors.length > "" && (
+            <small className="text-muted" id="passwordHelpInline">
+              {errors.email}Email required
+            </small>
           )}
         </div>
-        <div className="form-group">
-          <label htmlFor="exampleInputName1">Name</label>
-          <input
-            type="text"
-            className="form-control"
-            id="exampleInputName1"
-            aria-describedby="emailHelp"
-            placeholder="Name"
-            onChange={(e) => {
-              SetName(e.target.value);
-            }}
-          ></input>
-          {errors.name && <p className="input-error"> {errors.name} </p>}
-        </div>
-        <div className="form-group">
-          <label htmlFor="exampleInputAge1">Age</label>
-          <input
-            onChange={(e) => {
-              SetAge(e.target.value);
-            }}
-            type="number"
-            className="form-control"
-            id="exampleInputAge1"
-            aria-describedby="emailHelp"
-            placeholder="Age"
-          ></input>
-
-          {errors.age && <p className="input-error"> {errors.age} </p>}
-        </div>
-        <div className="form-group">
-          <button type="submit" className="btn btn-primary">
-            Register
-          </button>
-        </div>
-      </form>
+      </div>
+      <div className="form-group">
+        <label htmlFor="exampleInputPassword1">Password</label>
+        <input
+          type="password"
+          className="form-control"
+          id="exampleInputPassword1"
+          placeholder="Password"
+          onChange={handlePasswordChange}
+        ></input>
+        {errors.length > 0 && (
+          <small className="text-muted" id="passwordHelpInline">
+            {errors.password}password is required !
+          </small>
+        )}
+      </div>
+      <div className="form-group">
+        <label htmlFor="exampleInputName1">Name</label>
+        <input
+          type="text"
+          className="form-control"
+          id="exampleInputName1"
+          aria-describedby="emailHelp"
+          placeholder="Name"
+          onChange={handleNameChange}
+        ></input>
+        {errors.length && (
+          <small className="text-muted" id="passwordHelpInline">
+            {errors.name}name Required
+          </small>
+        )}
+      </div>
+      <div className="form-group">
+        <label htmlFor="exampleInputAge1">Age</label>
+        <input
+          onChange={handleAgeChange}
+          type="number"
+          className="form-control"
+          id="exampleInputAge1"
+          aria-describedby="emailHelp"
+          placeholder="Age"
+        ></input>
+        {errors && (
+          <small className="text-muted" id="passwordHelpInline">
+            {errors.age}Age Required
+          </small>
+        )}
+      </div>
+      <div className="form-group">
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={handleSubmit1}
+        >
+          Register
+        </button>
+      </div>
+      <div className="form-group">
+        <Link to="/Login">Login</Link>
+      </div>
     </div>
   );
 };
